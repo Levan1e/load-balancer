@@ -1,0 +1,594 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "description": "Forwards an incoming HTTP request to a healthy backend using round-robin balancing.",
+                "produces": [
+                    "text/plain"
+                ],
+                "summary": "Forward request to backend",
+                "responses": {
+                    "200": {
+                        "description": "Response from backend",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "502": {
+                        "description": "Failed to forward request",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "No healthy backends available",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/backends": {
+            "get": {
+                "description": "Get, add, or delete backend servers.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Backends"
+                ],
+                "summary": "Manage backends",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Backend URL (required for DELETE)",
+                        "name": "url",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Backend URL (required for POST, e.g., {\\",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of backends (GET)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Backend"
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Backend added (POST)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "Backend deleted (DELETE)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Backend not found",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Backend already exists",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Get, add, or delete backend servers.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Backends"
+                ],
+                "summary": "Manage backends",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Backend URL (required for DELETE)",
+                        "name": "url",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Backend URL (required for POST, e.g., {\\",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of backends (GET)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Backend"
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Backend added (POST)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "Backend deleted (DELETE)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Backend not found",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Backend already exists",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Get, add, or delete backend servers.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Backends"
+                ],
+                "summary": "Manage backends",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Backend URL (required for DELETE)",
+                        "name": "url",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Backend URL (required for POST, e.g., {\\",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of backends (GET)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Backend"
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Backend added (POST)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "Backend deleted (DELETE)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Backend not found",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Backend already exists",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/clients": {
+            "get": {
+                "description": "Get, add, or delete client-specific rate-limiting configurations.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Manage client rate limits",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Client ID (required for DELETE)",
+                        "name": "client_id",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Client configuration (required for POST, e.g., {\\",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/models.ClientConfig"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of client configurations (GET)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ClientConfig"
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Client added (POST)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "Client deleted (DELETE)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Client not found",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Client already exists",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Get, add, or delete client-specific rate-limiting configurations.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Manage client rate limits",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Client ID (required for DELETE)",
+                        "name": "client_id",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Client configuration (required for POST, e.g., {\\",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/models.ClientConfig"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of client configurations (GET)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ClientConfig"
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Client added (POST)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "Client deleted (DELETE)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Client not found",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Client already exists",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Get, add, or delete client-specific rate-limiting configurations.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Manage client rate limits",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Client ID (required for DELETE)",
+                        "name": "client_id",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Client configuration (required for POST, e.g., {\\",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/models.ClientConfig"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of client configurations (GET)",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ClientConfig"
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Client added (POST)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "204": {
+                        "description": "Client deleted (DELETE)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Client not found",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Client already exists",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/ratelimit": {
+            "patch": {
+                "description": "Update the global rate-limiting parameters (capacity and rate).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "RateLimit"
+                ],
+                "summary": "Update global rate limit",
+                "parameters": [
+                    {
+                        "description": "Rate limit parameters (e.g., {\\",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Rate limit updated",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to save configuration",
+                        "schema": {
+                            "$ref": "#/definitions/api.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "api.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Backend": {
+            "type": "object",
+            "properties": {
+                "healthy": {
+                    "type": "boolean"
+                },
+                "lastChecked": {
+                    "type": "string"
+                },
+                "loggedHealthy": {
+                    "description": "Tracks if healthy status was logged",
+                    "type": "boolean"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ClientConfig": {
+            "type": "object",
+            "properties": {
+                "capacity": {
+                    "type": "integer"
+                },
+                "client_id": {
+                    "type": "string"
+                },
+                "rate": {
+                    "type": "number"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,389 @@
+definitions:
+  api.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  models.Backend:
+    properties:
+      healthy:
+        type: boolean
+      lastChecked:
+        type: string
+      loggedHealthy:
+        description: Tracks if healthy status was logged
+        type: boolean
+      url:
+        type: string
+    type: object
+  models.ClientConfig:
+    properties:
+      capacity:
+        type: integer
+      client_id:
+        type: string
+      rate:
+        type: number
+    type: object
+info:
+  contact: {}
+paths:
+  /:
+    get:
+      description: Forwards an incoming HTTP request to a healthy backend using round-robin
+        balancing.
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: Response from backend
+          schema:
+            type: string
+        "429":
+          description: Rate limit exceeded
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "502":
+          description: Failed to forward request
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "503":
+          description: No healthy backends available
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Forward request to backend
+  /backends:
+    delete:
+      consumes:
+      - application/json
+      description: Get, add, or delete backend servers.
+      parameters:
+      - description: Backend URL (required for DELETE)
+        in: query
+        name: url
+        type: string
+      - description: Backend URL (required for POST, e.g., {\
+        in: body
+        name: body
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of backends (GET)
+          schema:
+            items:
+              $ref: '#/definitions/models.Backend'
+            type: array
+        "201":
+          description: Backend added (POST)
+          schema:
+            type: string
+        "204":
+          description: Backend deleted (DELETE)
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "404":
+          description: Backend not found
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "409":
+          description: Backend already exists
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Manage backends
+      tags:
+      - Backends
+    get:
+      consumes:
+      - application/json
+      description: Get, add, or delete backend servers.
+      parameters:
+      - description: Backend URL (required for DELETE)
+        in: query
+        name: url
+        type: string
+      - description: Backend URL (required for POST, e.g., {\
+        in: body
+        name: body
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of backends (GET)
+          schema:
+            items:
+              $ref: '#/definitions/models.Backend'
+            type: array
+        "201":
+          description: Backend added (POST)
+          schema:
+            type: string
+        "204":
+          description: Backend deleted (DELETE)
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "404":
+          description: Backend not found
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "409":
+          description: Backend already exists
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Manage backends
+      tags:
+      - Backends
+    post:
+      consumes:
+      - application/json
+      description: Get, add, or delete backend servers.
+      parameters:
+      - description: Backend URL (required for DELETE)
+        in: query
+        name: url
+        type: string
+      - description: Backend URL (required for POST, e.g., {\
+        in: body
+        name: body
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of backends (GET)
+          schema:
+            items:
+              $ref: '#/definitions/models.Backend'
+            type: array
+        "201":
+          description: Backend added (POST)
+          schema:
+            type: string
+        "204":
+          description: Backend deleted (DELETE)
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "404":
+          description: Backend not found
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "409":
+          description: Backend already exists
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Manage backends
+      tags:
+      - Backends
+  /clients:
+    delete:
+      consumes:
+      - application/json
+      description: Get, add, or delete client-specific rate-limiting configurations.
+      parameters:
+      - description: Client ID (required for DELETE)
+        in: query
+        name: client_id
+        type: string
+      - description: Client configuration (required for POST, e.g., {\
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/models.ClientConfig'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of client configurations (GET)
+          schema:
+            items:
+              $ref: '#/definitions/models.ClientConfig'
+            type: array
+        "201":
+          description: Client added (POST)
+          schema:
+            type: string
+        "204":
+          description: Client deleted (DELETE)
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "404":
+          description: Client not found
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "409":
+          description: Client already exists
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Manage client rate limits
+      tags:
+      - Clients
+    get:
+      consumes:
+      - application/json
+      description: Get, add, or delete client-specific rate-limiting configurations.
+      parameters:
+      - description: Client ID (required for DELETE)
+        in: query
+        name: client_id
+        type: string
+      - description: Client configuration (required for POST, e.g., {\
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/models.ClientConfig'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of client configurations (GET)
+          schema:
+            items:
+              $ref: '#/definitions/models.ClientConfig'
+            type: array
+        "201":
+          description: Client added (POST)
+          schema:
+            type: string
+        "204":
+          description: Client deleted (DELETE)
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "404":
+          description: Client not found
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "409":
+          description: Client already exists
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Manage client rate limits
+      tags:
+      - Clients
+    post:
+      consumes:
+      - application/json
+      description: Get, add, or delete client-specific rate-limiting configurations.
+      parameters:
+      - description: Client ID (required for DELETE)
+        in: query
+        name: client_id
+        type: string
+      - description: Client configuration (required for POST, e.g., {\
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/models.ClientConfig'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of client configurations (GET)
+          schema:
+            items:
+              $ref: '#/definitions/models.ClientConfig'
+            type: array
+        "201":
+          description: Client added (POST)
+          schema:
+            type: string
+        "204":
+          description: Client deleted (DELETE)
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "404":
+          description: Client not found
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "409":
+          description: Client already exists
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Manage client rate limits
+      tags:
+      - Clients
+  /ratelimit:
+    patch:
+      consumes:
+      - application/json
+      description: Update the global rate-limiting parameters (capacity and rate).
+      parameters:
+      - description: Rate limit parameters (e.g., {\
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Rate limit updated
+          schema:
+            type: string
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+        "500":
+          description: Failed to save configuration
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Update global rate limit
+      tags:
+      - RateLimit
+swagger: "2.0"

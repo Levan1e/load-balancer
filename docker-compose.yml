@@ -1,0 +1,79 @@
+version: '3.8'
+services:
+  load-balancer:
+    container_name: load-balancer
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+    - 8087:8087
+    volumes:
+    - ./configs:/app/configs
+    depends_on:
+      backend1:
+        condition: service_healthy
+      backend2:
+        condition: service_healthy
+    environment:
+    - LOG_LEVEL=DEBUG
+    networks:
+    - balancer-net
+  redis:
+    image: redis:7.4
+    ports:
+    - 6379:6379
+    volumes:
+    - redis-data:/data
+    healthcheck:
+      test:
+      - CMD
+      - redis-cli
+      - ping
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+    - balancer-net
+  backend1:
+    image: nginx:1.27
+    container_name: backend1
+    ports:
+    - 8001:80
+    volumes:
+    - ./configs/nginx.conf:/etc/nginx/nginx.conf
+    - ./configs/index-backend1.html:/usr/share/nginx/html/index.html
+    healthcheck:
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost/health
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+    - balancer-net
+  backend2:
+    image: nginx:1.27
+    container_name: backend2
+    ports:
+    - 8002:80
+    volumes:
+    - ./configs/nginx.conf:/etc/nginx/nginx.conf
+    - ./configs/index-backend2.html:/usr/share/nginx/html/index.html
+    healthcheck:
+      test:
+      - CMD
+      - curl
+      - -f
+      - http://localhost/health
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+    - balancer-net
+networks:
+  balancer-net:
+    driver: bridge
+volumes:
+  redis-data: {}
